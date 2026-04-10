@@ -1,0 +1,18 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cpu-burner-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cpu-burner-deployment # This is the Kitchen Manager we are attaching this rule to
+  minReplicas: 1 # Never go below 1 pod
+  maxReplicas: 10 # Never go above 10 pods (saves you from crashing your laptop!)
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50 # If average CPU goes over 50%, SCALE UP

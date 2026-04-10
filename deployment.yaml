@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-burner-deployment
+spec:
+  replicas: 1 # Start with exactly 1 copy (pod) of our app
+  selector:
+    matchLabels:
+      app: cpu-burner
+  template:
+    metadata:
+      labels:
+        app: cpu-burner
+    spec:
+      containers:
+      - name: cpu-burner-container
+        image: cpu-burner # The image we just built!
+        imagePullPolicy: Never # Tells K8s "Use the local image, don't download from the internet"
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m" # CRITICAL for Phase 5: Tells K8s this pod usually needs 10% of a CPU core
